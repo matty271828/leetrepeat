@@ -1,4 +1,4 @@
-import LeetCodeSpacedRepetition from './components/LeetCodeSpacedRepetition'
+import LeetCodeSpacedRepetition from './components/homepage'
 
 function App() {
   return <LeetCodeSpacedRepetition />
