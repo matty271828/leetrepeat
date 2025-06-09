@@ -130,7 +130,7 @@ const gradingSystem = [
   },
 ]
 
-export default function LeetCodeSpacedRepetition() {
+export default function LeetRepeat() {
   const [problems, setProblems] = useState<Problem[]>([])
   const [newProblemUrl, setNewProblemUrl] = useState("")
   const [showExplanation, setShowExplanation] = useState(false)
@@ -267,12 +267,12 @@ export default function LeetCodeSpacedRepetition() {
                     <Brain className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
                   </div>
                 </div>
-                <div className="text-center sm:text-left">
+                <div className="text-center">
                   <h1 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent leading-tight tracking-tight">
-                    LeetCode Mastery
+                    LeetRepeat
                   </h1>
                   <p className="text-sm sm:text-base text-slate-500 font-semibold tracking-wide">
-                    Spaced Repetition System
+                    LeetCode Mastery Through Spaced Repetition
                   </p>
                 </div>
               </div>

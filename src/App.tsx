@@ -1,7 +1,7 @@
-import LeetCodeSpacedRepetition from './components/homepage'
+import LeetRepeat from './components/homepage'
 
 function App() {
-  return <LeetCodeSpacedRepetition />
+  return <LeetRepeat />
 }
 
 export default App
