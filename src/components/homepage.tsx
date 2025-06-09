@@ -88,43 +88,43 @@ function extractLeetCodeTitle(url: string): string {
 const gradingSystem = [
   {
     grade: 0,
-    label: "No Clue",
-    description: "Zero clue how to do it",
+    label: "No Pattern",
+    description: "Couldn't identify any patterns or approaches to solve",
     color: "bg-slate-600 hover:bg-slate-700 active:bg-slate-800",
     textColor: "text-slate-600",
   },
   {
     grade: 1,
-    label: "Vague Recall",
-    description: "Didn't solve, but had guesses / vaguely recalled solution",
+    label: "Pattern Glimpse",
+    description: "Saw some patterns but couldn't form a complete solution",
     color: "bg-red-500 hover:bg-red-600 active:bg-red-700",
     textColor: "text-red-600",
   },
   {
     grade: 2,
-    label: "Right Idea",
-    description: "Didn't solve, but had mostly the right idea",
+    label: "Solution Path",
+    description: "Identified the right approach but couldn't implement it correctly",
     color: "bg-orange-500 hover:bg-orange-600 active:bg-orange-700",
     textColor: "text-orange-600",
   },
   {
     grade: 3,
-    label: "Solved Hard",
-    description: "Solved, but took significant effort / many attempts",
+    label: "Working Solution",
+    description: "Solved it with a suboptimal approach or needed hints",
     color: "bg-yellow-500 hover:bg-yellow-600 active:bg-yellow-700",
     textColor: "text-yellow-600",
   },
   {
     grade: 4,
-    label: "Solved OK",
-    description: "Solved, but felt tricky or was not the best solution",
+    label: "Clean Solution",
+    description: "Solved it efficiently with minimal help or hints",
     color: "bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700",
     textColor: "text-emerald-600",
   },
   {
     grade: 5,
-    label: "Solved Easy",
-    description: "Solved smoothly and easily",
+    label: "Pattern Mastered",
+    description: "Instantly recognized the pattern and implemented optimal solution",
     color: "bg-green-500 hover:bg-green-600 active:bg-green-700",
     textColor: "text-green-600",
   },
@@ -138,22 +138,53 @@ export default function LeetCodeSpacedRepetition() {
 
   // Load problems from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem("leetcode-problems")
-    if (saved) {
-      const parsed = JSON.parse(saved)
-      // Convert date strings back to Date objects
-      const problemsWithDates = parsed.map((p: any) => ({
-        ...p,
-        nextReview: new Date(p.nextReview),
-        lastReviewed: p.lastReviewed ? new Date(p.lastReviewed) : undefined,
-      }))
-      setProblems(problemsWithDates)
+    try {
+      const saved = localStorage.getItem("leetcode-problems")
+      console.log("Loading from localStorage:", saved)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        console.log("Parsed data:", parsed)
+        // Convert date strings back to Date objects
+        const problemsWithDates = parsed.map((p: any) => {
+          try {
+            return {
+              ...p,
+              nextReview: new Date(p.nextReview),
+              lastReviewed: p.lastReviewed ? new Date(p.lastReviewed) : undefined,
+            }
+          } catch (e) {
+            console.error("Error converting dates for problem:", p, e)
+            return p
+          }
+        })
+        console.log("Problems with dates:", problemsWithDates)
+        setProblems(problemsWithDates)
+      } else {
+        console.log("No saved problems found in localStorage")
+      }
+    } catch (e) {
+      console.error("Error loading from localStorage:", e)
     }
   }, [])
 
   // Save problems to localStorage whenever problems change
   useEffect(() => {
-    localStorage.setItem("leetcode-problems", JSON.stringify(problems))
+    try {
+      console.log("Saving to localStorage:", problems)
+      if (problems.length > 0) {
+        const dataToSave = problems.map(p => ({
+          ...p,
+          nextReview: p.nextReview.toISOString(),
+          lastReviewed: p.lastReviewed?.toISOString()
+        }))
+        console.log("Data being saved:", dataToSave)
+        localStorage.setItem("leetcode-problems", JSON.stringify(dataToSave))
+      } else {
+        console.log("No problems to save")
+      }
+    } catch (e) {
+      console.error("Error saving to localStorage:", e)
+    }
   }, [problems])
 
   const addProblem = async () => {
@@ -291,12 +322,12 @@ export default function LeetCodeSpacedRepetition() {
                           <div className="p-2 bg-purple-100 rounded-lg">
                             <Brain className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
                           </div>
-                          <h3 className="text-sm font-semibold text-slate-800">Spaced Repetition</h3>
+                          <h3 className="text-sm font-semibold text-slate-800">Pattern Recognition</h3>
                         </div>
                         <p className="text-xs text-slate-600 leading-relaxed">
-                          A learning technique that increases intervals between reviews based on how well you know the
-                          material. It exploits the psychological spacing effect to dramatically improve long-term retention
-                          and reduce study time.
+                          LeetCode problems often follow common patterns and techniques. Spaced repetition helps you build
+                          pattern recognition skills by reviewing problems at optimal intervals, making it easier to identify
+                          the right approach quickly.
                         </p>
                       </div>
 
@@ -308,9 +339,9 @@ export default function LeetCodeSpacedRepetition() {
                           <h3 className="text-sm font-semibold text-slate-800">SM-2 Algorithm</h3>
                         </div>
                         <p className="text-xs text-slate-600 leading-relaxed">
-                          Developed in the 1980s by Piotr Wozniak, the SM-2 algorithm calculates optimal review intervals
-                          based on your performance. Problems you find easier are shown less frequently, while difficult
-                          ones appear more often.
+                          The SM-2 algorithm adapts to your problem-solving ability. Problems you solve easily are reviewed
+                          less frequently, while challenging ones appear more often. This helps you focus on patterns that
+                          need more practice.
                         </p>
                       </div>
 
@@ -319,11 +350,12 @@ export default function LeetCodeSpacedRepetition() {
                           <div className="p-2 bg-orange-100 rounded-lg">
                             <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
                           </div>
-                          <h3 className="text-sm font-semibold text-slate-800">Usage Workflow</h3>
+                          <h3 className="text-sm font-semibold text-slate-800">Learning Workflow</h3>
                         </div>
                         <p className="text-xs text-slate-600 leading-relaxed">
-                          Add LeetCode problems, solve them when due, then rate your performance using our detailed 0-5
-                          scale. The algorithm schedules optimal review times to maximize retention and minimize forgetting.
+                          Add LeetCode problems you want to master. When reviewing, focus on pattern recognition and
+                          implementation quality. Rate your performance based on how well you identified and applied the
+                          solution pattern.
                         </p>
                       </div>
                     </div>
@@ -333,7 +365,7 @@ export default function LeetCodeSpacedRepetition() {
                     <div className="bg-gradient-to-r from-slate-50 to-blue-50/50 rounded-lg p-3 border border-slate-200">
                       <div className="flex items-center gap-2 mb-3">
                         <HelpCircle className="w-4 h-4 text-slate-600" />
-                        <h4 className="text-sm font-semibold text-slate-800">Detailed Grading System</h4>
+                        <h4 className="text-sm font-semibold text-slate-800">Pattern Recognition Guide</h4>
                       </div>
 
                       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -359,8 +391,9 @@ export default function LeetCodeSpacedRepetition() {
 
                       <div className="mt-3 p-2 bg-blue-50 rounded-lg border border-blue-200">
                         <p className="text-[10px] text-blue-800 font-medium text-center">
-                          💡 <strong>Pro Tip:</strong> Grades 0-2 reset the problem to restart the learning cycle, while
-                          grades 3-5 increase the review interval
+                          💡 <strong>Pro Tip:</strong> Focus on recognizing patterns rather than memorizing solutions. 
+                          Grades 0-2 indicate you need more practice with this pattern, while grades 3-5 show you're 
+                          mastering it.
                         </p>
                       </div>
                     </div>
